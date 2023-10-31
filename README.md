@@ -1,2 +1,2 @@
 # NbspStatus
-Widget for Scricptable
+Widget for Scriptable
