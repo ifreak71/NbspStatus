@@ -8,9 +8,9 @@ widget.backgroundColor = new Color("#f1f1f1") // Hintergrundfarbe ändern
 widget.size = new Size(150, 150) // Widget-Größe ändern
 
 // Logo hinzufügen, Größe ändern und zentrieren
-let logo = await loadImage("/NbspStatus/logo.png") // Stellen Sie sicher, dass die Datei "chaot.png" in iCloud Drive liegt
+let logo = await loadImage("/NbspStatus/logo.png") // Datei "logo.png" in iCloud Drive liegt
 let logoImage = widget.addImage(logo)
-logoImage.imageSize = new Size(100, 50) // Ändern Sie die Größe nach Ihren Wünschen
+logoImage.imageSize = new Size(100, 50) // Image Größe 
 logoImage.leftAlignImage()
 
 // Texte auf der Website überprüfen
@@ -58,8 +58,7 @@ function addStyledText(text, color, isBold) {
     }
     textItem.leftAlignText()
 }
-
-    function addStyledText1(text, color, isBold) {
+function addStyledText1(text, color, isBold) {
     let textItem = widget.addText(text)
     textItem.textColor = Color[color]()
     if (isBold) {
