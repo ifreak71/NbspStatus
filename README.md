@@ -1,0 +1,2 @@
+# NbspStatus
+Widget for Scricptable
