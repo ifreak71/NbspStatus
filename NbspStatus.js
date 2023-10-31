@@ -8,7 +8,7 @@ widget.backgroundColor = new Color("#f1f1f1") // Hintergrundfarbe ändern
 widget.size = new Size(150, 150) // Widget-Größe ändern
 
 // Logo hinzufügen, Größe ändern und zentrieren
-let logoURL = "https://chaotikum.org/assets/logo.png" // Ersetzen Sie "URL_DES_LOGOS" durch die tatsächliche URL des Logos
+let logoURL = "https://chaotikum.org/assets/logo.png" // "URL_DES_LOGOS" URL des Logos
 let logo = await loadImageFromURL(logoURL)
 //let logo = await loadImage("/NbspStatus/logo.png") // Datei "logo.png" in iCloud Drive
 let logoImage = widget.addImage(logo)
