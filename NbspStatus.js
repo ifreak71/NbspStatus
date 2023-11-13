@@ -1,76 +1,80 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: magic;
-// Quadratisches Widget mit 150x150 Größe
-let widget = new ListWidget()
-widget.url = "https://chaotikum.org/"
-widget.backgroundColor = new Color("#f1f1f1") // Hintergrundfarbe ändern
-widget.size = new Size(150, 150) // Widget-Größe ändern
+// icon-color: pink; icon-glyph: magic;
+// Widget für Scriptable, um den Status von https://status.nobreakspace.org/spaceapi.json anzuzeigen
 
-// Logo hinzufügen, Größe ändern und zentrieren
-let logoURL = "https://chaotikum.org/assets/logo.png" // "URL_DES_LOGOS" URL des Logos
-let logo = await loadImageFromURL(logoURL)
-//let logo = await loadImage("/NbspStatus/logo.png") // Datei "logo.png" in iCloud Drive
-let logoImage = widget.addImage(logo)
-logoImage.imageSize = new Size(100, 50) // Image Größe 
-logoImage.leftAlignImage()
+// JSON-Daten abrufen
+const apiUrl = "https://status.nobreakspace.org/spaceapi.json";
+const response = await new Request(apiUrl).loadJSON();
 
-// Texte auf der Website überprüfen
-let websiteText = await fetchWebsiteText("https://chaotikum.org/")
-if (websiteText.includes("Der Nbsp ist offen!")) {
-    addStyledText("Der Nbsp ist", "black", true)
-    addStyledText1("OFFEN!", "green", true)
-} else if (websiteText.includes("Der Nbsp ist geschlossen!")) {
-    addStyledText("Der Nbsp ist", "black", true)
-    addStyledText1("GESCHLOSSEN!", "red", true)
+// Status überprüfen
+const isOpen = response.state.open;
+
+// Widget erstellen
+let widget = new ListWidget();
+widget.url = "https://chaotikum.org";
+widget.backgroundColor = Color.darkGray();
+widget.setPadding(0, 0, 0, 0)
+
+
+// Füge ein Bild zum Widget hinzu
+let image = widget.addImage(await loadImageFromICloud("/NbspStatus/logo.png"));
+image.imageSize = new Size(100, 40); // Größe des Bildes anpassen
+image.centerAlignImage (); // Positioniert das Bild im Widget
+image.applyFillingContentMode()
+widget.addSpacer(10)
+
+// Widget-Design anpassen
+let statusText = widget.addText("Nobreakspace");
+statusText.font = Font.boldSystemFont(18);
+statusText.textColor = Color.black();
+statusText.centerAlignText();
+widget.addSpacer(10);
+
+let stack = widget.addStack();
+stack.setPadding(5, 18, 5, 10);
+
+// Entsprechend dem Status die Anzeige anpassen
+if (isOpen) {
+  let image = stack.addImage(await loadImageFromICloud("/NbspStatus/open.png"))
+  image.imageSize = new Size(23, 23); // Größe des Bildes anpassen
+  let openText = stack.addText("Geöffnet");
+  openText.font = Font.boldSystemFont(18);
+  openText.textColor = Color.green();
 } else {
-    addStyledText("Text nicht gefunden", "gray")
+  let image = stack.addImage(await loadImageFromICloud("/NbspStatus/closed.png"))
+  image.imageSize = new Size(23, 23) // Größe des Bildes anpassen
+  let closedText = stack.addText("Geschlossen");
+  closedText.font = Font.boldSystemFont(18);
+  closedText.textColor = Color.red();
 }
+widget.addSpacer(8)
 
+let currentDate = new Date();
+
+let dateText = widget.addText(`${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`);
+dateText.textColor = Color.white();
+dateText.font = Font.systemFont(8);
+dateText.centerAlignText();
+
+
+// Widget anzeigen
 if (config.runsInWidget) {
-    // Widget im Vorschaumodus anzeigen
-    Script.setWidget(widget)
+  // Im Widget anzeigen
+  Script.setWidget(widget);
 } else {
-    // Skript außerhalb des Widgets ausführen
-    widget.presentSmall()
+  // Als Test in der App anzeigen
+  widget.presentSmall();
 }
 
-Script.complete()
+Script.complete();
 
-// Funktion zum Laden des Bildes
-async function loadImage(imagePath) {
-    let fm = FileManager.iCloud()
-    let imgPath = fm.joinPath(fm.documentsDirectory(), imagePath)
-    return Image.fromFile(imgPath)
-}
+// Funktion, um ein Image aus der iCloud zu laden
 
-// Funktion zum Laden des Bildes aus dem Internet
-async function loadImageFromURL(url) {
-    let req = new Request(url)
-    return await req.loadImage()
-}
+async function loadImageFromICloud(filename) {
+  let fm = FileManager.iCloud()
+  let dir = fm.documentsDirectory()
+  let path = fm.joinPath(dir, filename)
 
-// Funktion zum Abrufen des Texts von einer Website
-async function fetchWebsiteText(url) {
-    let req = new Request(url)
-    let html = await req.loadString()
-    return html
-}
-
-// Funktion zum Hinzufügen von farbigem Text
-function addStyledText(text, color, isBold) {
-    let textItem = widget.addText(text)
-    textItem.textColor = Color[color]()
-    if (isBold) {
-    textItem.font = Font.boldSystemFont(14) 
-    }
-    textItem.centerAlignText()
-}
-function addStyledText1(text, color, isBold) {
-    let textItem = widget.addText(text)
-    textItem.textColor = Color[color]()
-    if (isBold) {
-    textItem.font = Font.boldSystemFont(18) 
-    }
-    textItem.centerAlignText()
+  return fm.readImage(path)
 }
