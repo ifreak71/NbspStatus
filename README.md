@@ -5,6 +5,6 @@ Es zeig den Status des Nobreakspace des Hackerspaces https://chaotikum.org/ an o
 
 # Installation
 
-* Kopiere den Ordner NbspStatus in den Scriptableorder
+* Kopiere den Ordner NbspStatus in den Scriptableordner
 * Kopiere das Javascript NbspStatus.js in den Scriptableorder
 * Führe die App Scriptable aus und starte NbspStatus
