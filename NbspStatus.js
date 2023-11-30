@@ -3,6 +3,13 @@
 // icon-color: pink; icon-glyph: magic;
 // Widget für Scriptable, um den Status von https://status.nobreakspace.org/spaceapi.json anzuzeigen
 
+const DARK_BG = new Color('#FF8C00'); // Dunkelorange #FF8C00
+const DARK_TEXT = new Color('#E3E3E3'); // Grey #E3E3E3 Schwarz 89% heller
+
+const LIGHT_BG = new Color('#FFA500'); // Orange #FFA500
+const LIGHT_TEXT = new Color('#000000'); // Black #000000
+
+
 // JSON-Daten abrufen
 const apiUrl = "https://status.nobreakspace.org/spaceapi.json";
 const response = await new Request(apiUrl).loadJSON();
@@ -13,11 +20,11 @@ const isOpen = response.state.open;
 // Widget erstellen
 let widget = new ListWidget();
 widget.url = "https://chaotikum.org";
-widget.backgroundColor = Color.darkGray();
+widget.backgroundColor = Color.dynamic(LIGHT_BG, DARK_BG);
 widget.setPadding(0, 0, 0, 0)
 
 
-// Füge ein Bild zum Widget hinzu
+// Fügt ein Bild zum Widget hinzu
 let image = widget.addImage(await loadImageFromICloud("/NbspStatus/logo.png"));
 image.imageSize = new Size(100, 40); // Größe des Bildes anpassen
 image.centerAlignImage (); // Positioniert das Bild im Widget
@@ -27,7 +34,7 @@ widget.addSpacer(10)
 // Widget-Design anpassen
 let statusText = widget.addText("Nobreakspace");
 statusText.font = Font.boldSystemFont(18);
-statusText.textColor = Color.black();
+statusText.textColor = Color.dynamic(LIGHT_TEXT, DARK_TEXT);
 statusText.centerAlignText();
 widget.addSpacer(10);
 
@@ -50,14 +57,22 @@ if (isOpen) {
 }
 widget.addSpacer(8)
 
-let currentDate = new Date();
 
-let dateText = widget.addText(`${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`);
-dateText.textColor = Color.white();
-dateText.font = Font.systemFont(8);
-dateText.centerAlignText();
+  // last updated stack
+  const updatedStack = widget.addStack();
+  updatedStack.layoutHorizontally();
+  const updatedImg = SFSymbol.named('arrow.clockwise').image;
+  updatedStack.addSpacer();
+  const updatedIcon = updatedStack.addImage(updatedImg);
+  updatedIcon.tintColor = Color.dynamic(LIGHT_TEXT, DARK_TEXT);
+  updatedIcon.imageSize = new Size(9, 9);
+  updatedStack.addSpacer(5);
+  var currentDate = new Date();
+  const dateString = updatedStack.addText(`${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`);
+  dateString.font = Font.systemFont(8);
+  updatedStack.addSpacer()
 
-
+  
 // Widget anzeigen
 if (config.runsInWidget) {
   // Im Widget anzeigen
