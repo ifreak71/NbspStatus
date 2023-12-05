@@ -1,7 +1,7 @@
 # NbspStatus
 Widget für Scriptable
 
-Es zeig den Status des Nobreakspace des Hackerspaces https://chaotikum.org/ an ob er geöffnet oder geschlossen ist
+Es zeigt den Status des Nobreakspace des Hackerspaces https://chaotikum.org/ an ob er geöffnet oder geschlossen ist
 
 # Installation
 
